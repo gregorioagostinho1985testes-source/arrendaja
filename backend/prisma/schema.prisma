@@ -1,0 +1,143 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// A partir daqui mantenha os seus enums e models normalmente (User, Property, etc.)
+
+// Seus modelos (User, Property, etc.) continuam aqui...
+enum Role {
+  TENANT
+  LANDLORD
+  ADMIN
+}
+
+enum PropertyStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  RENTED
+  SUSPENDED
+}
+
+enum PropertyType {
+  APARTMENT
+  HOUSE
+  ANNEX
+  COMMERCIAL
+}
+
+enum IdentityStatus {
+  UNVERIFIED
+  PENDING
+  VERIFIED
+  REJECTED
+}
+
+model User {
+  id             String         @id @default(uuid())
+  fullName       String
+  email          String         @unique
+  phoneNumber    String         @unique
+  passwordHash   String
+  role           Role           @default(TENANT)
+  identityStatus IdentityStatus @default(UNVERIFIED)
+  avatarUrl      String?
+  documentUrl    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  properties      Property[] @relation("LandlordProperties")
+  sentMessages    Message[]  @relation("SentMessages")
+  chatsAsTenant   Chat[]     @relation("TenantChats")
+  chatsAsLandlord Chat[]     @relation("LandlordChats")
+
+  @@index([email])
+  @@index([phoneNumber])
+}
+
+model Property {
+  id          String         @id @default(uuid())
+  title       String
+  description String
+  price       Decimal        @db.Decimal(12, 2)
+  type        PropertyType
+  status      PropertyStatus @default(PENDING)
+
+  province     String  @default("Luanda")
+  municipality String
+  neighborhood String
+  address      String?
+
+  bedrooms String  @default("1")
+  bathrooms String  @default("1")
+  hasWater Boolean @default(false)
+  hasPower Boolean @default(false)
+
+  rejectionReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  landlordId String
+  landlord   User   @relation("LandlordProperties", fields: [landlordId], references: [id], onDelete: Cascade)
+
+  images PropertyImage[]
+  chats  Chat[]
+
+  @@index([municipality, status])
+  @@index([price, status])
+  @@index([type, status])
+  @@index([landlordId])
+}
+
+model PropertyImage {
+  id        String  @id @default(uuid())
+  url       String
+  isPrimary Boolean @default(false)
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId])
+}
+
+model Chat {
+  id        String   @id @default(uuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  propertyId String
+  property   Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  tenantId String
+  tenant   User     @relation("TenantChats", fields: [tenantId], references: [id], onDelete: Cascade)
+
+  landlordId String
+  landlord   User     @relation("LandlordChats", fields: [landlordId], references: [id], onDelete: Cascade)
+
+  messages Message[]
+
+  @@unique([propertyId, tenantId])
+  @@index([tenantId])
+  @@index([landlordId])
+}
+
+model Message {
+  id        String   @id @default(uuid())
+  content   String
+  isRead    Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  chatId String
+  chat   Chat   @relation(fields: [chatId], references: [id], onDelete: Cascade)
+
+  senderId String
+  sender   User   @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+
+  @@index([chatId, createdAt])
+}
