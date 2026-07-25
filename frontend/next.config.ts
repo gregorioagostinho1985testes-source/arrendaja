@@ -10,6 +10,8 @@ const withPWA = withPWAInit({
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // 1. Adicione esta linha para autorizar o Turbopack junto ao Webpack
+  turbopack: {},
   images: {
     remotePatterns: [
       {
