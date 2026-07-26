@@ -53,11 +53,11 @@ export default function PublicarPage() {
       })
 
       router.push('/')
-    } catch (err: any) {
-      setError(err.response?.data?.message || 'Erro ao publicar imóvel.')
-    } flex {
-      setLoading(false)
-    }
+   } catch (err: any) {
+  setError(err.response?.data?.message || 'Erro ao publicar imóvel.')
+} finally {
+  setLoading(false)
+}
   }
 
   return (
