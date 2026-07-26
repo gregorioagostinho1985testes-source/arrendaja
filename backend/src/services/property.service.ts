@@ -3,13 +3,15 @@ import { CreatePropertyInput } from '../schemas/property.schema'
 
 export class PropertyService {
   async create(landlordId: string, data: CreatePropertyInput) {
-    const { imageUrl, ...propertyData } = data
+    const { imageUrl, bedrooms, bathrooms, ...propertyData } = data
 
     const property = await prisma.property.create({
       data: {
         ...propertyData,
+        bedrooms: Number(bedrooms),
+        bathrooms: Number(bathrooms),
         landlordId,
-        status: 'APPROVED', // Aprovação direta na versão dev/MVP
+        status: 'APPROVED', // Aprovação direta no MVP
         images: imageUrl ? {
           create: [{ url: imageUrl, isPrimary: true }]
         } : undefined

@@ -74,8 +74,8 @@ model Property {
   neighborhood String
   address      String?
 
-  bedrooms String  @default("1")
-  bathrooms String  @default("1")
+  bedrooms Int  @default(1)
+  bathrooms Int  @default(1)
   hasWater Boolean @default(false)
   hasPower Boolean @default(false)
 
