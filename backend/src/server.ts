@@ -17,11 +17,18 @@ export async function buildApp() {
 
   await app.register(helmet, { contentSecurityPolicy: false })
   
-  await app.register(cors, {
-    origin: '*', // Permite acesso em ambiente de dev/prod
-    credentials: true
+await app.register(cors, {
+    origin: (origin, cb) => {
+      // Permite requisições sem origin (como cURL, Postman) ou qualquer origem de frontend
+      if (!origin || true) {
+        cb(null, true)
+        return
+      }
+    },
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
   })
-
+  
   await app.register(rateLimit, { max: 100, timeWindow: '1 minute' })
   await app.register(cookie)
 
