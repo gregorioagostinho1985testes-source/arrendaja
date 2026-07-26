@@ -6,6 +6,8 @@ import rateLimit from '@fastify/rate-limit'
 import cookie from '@fastify/cookie'
 
 import { authRoutes } from './routes/auth.routes'
+import { propertyRoutes } from './routes/property.routes'
+
 
 import { env } from './env'
 import { prisma } from './lib/prisma'
@@ -55,6 +57,7 @@ await app.register(cors, {
 
   // Registar rotas da API com o prefixo v1
   await app.register(authRoutes, { prefix: '/api/v1/auth' })
+  await app.register(propertyRoutes, { prefix: '/api/v1/properties' })
 
   return app
 }
