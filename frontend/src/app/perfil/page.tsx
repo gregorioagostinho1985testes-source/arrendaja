@@ -38,9 +38,10 @@ export default function ProfilePage() {
       setMessage('Conta verificada com sucesso!')
       
       // Atualizar dados no contexto local
-      if (token) {
-        login(token, { ...user, identityStatus: 'VERIFIED' })
-      }
+    // Opção 1: Garantindo que o id existe (assumindo que o utilizador está logado)
+    if (token && user?.id) {
+    login(token, { ...user, id: user.id, identityStatus: 'VERIFIED' })
+    }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erro ao submeter BI.')
     } finally {
