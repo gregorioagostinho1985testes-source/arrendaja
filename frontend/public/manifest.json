@@ -1,7 +1,7 @@
 {
-  "name": "ArrendaJá — Arrendamento em Luanda",
+  "name": "ArrendaJá - Imóveis em Luanda",
   "short_name": "ArrendaJá",
-  "description": "Plataforma directa de arrendamento imobiliário sem intermediários em Luanda.",
+  "description": "Plataforma de arrendamento direto de imóveis em Luanda sem intermediários.",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#ffffff",
