@@ -33,7 +33,7 @@ export default function ProfilePage() {
     setMessage('')
     setError('')
 
-    try {
+   /* try {
       const response = await api.post('/identity/verify', { identityNumber })
       setMessage('Conta verificada com sucesso!')
       
@@ -42,6 +42,19 @@ export default function ProfilePage() {
     if (token && user?.id) {
     login(token, { ...user, id: user.id, identityStatus: 'VERIFIED' })
     }
+    } catch (err: any) {*/
+     try {
+      const response = await api.post('/identity/verify', { identityNumber })
+      setMessage('Conta verificada com sucesso!')
+      
+      // Atualizar diretamente o estado no contexto de autenticação
+      if (token && user?.id) {
+        login(token, { 
+          ...user, 
+          id: user.id, 
+          identityStatus: 'VERIFIED' // Força o estado local a refletir a verificação
+        })
+      }
     } catch (err: any) {
       setError(err.response?.data?.message || 'Erro ao submeter BI.')
     } finally {
