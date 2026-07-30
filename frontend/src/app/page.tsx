@@ -182,7 +182,7 @@ export default function MobileHomePage() {
           <PlusSquare className="w-5 h-5" />
           <span className="text-[10px] mt-0.5">Anunciar</span>
         </Link>
-        <Link href="/login" className="flex flex-col items-center text-gray-400">
+        <Link href="/perfil" className="flex flex-col items-center text-gray-400">
           <User className="w-5 h-5" />
           <span className="text-[10px] mt-0.5">Conta</span>
         </Link>
